@@ -18,6 +18,26 @@ const InfoModal = ({ movie, onClose }: InfoModalProps) => {
   const [genres, setGenres] = useState<{ id: number; name: string }[]>([]);
   const [supabase] = useState(() => createClient());
 
+  const getLikedStorageKey = (userId: string) => `liked_movies:${userId}`;
+
+  const readLikedMovieIds = (userId: string) => {
+    if (typeof window === 'undefined') return [] as number[];
+
+    try {
+      const rawValue = window.localStorage.getItem(getLikedStorageKey(userId));
+      const parsedValue = rawValue ? JSON.parse(rawValue) : [];
+      return Array.isArray(parsedValue) ? parsedValue.filter((value) => typeof value === 'number') : [];
+    } catch {
+      return [] as number[];
+    }
+  };
+
+  const writeLikedMovieIds = (userId: string, ids: number[]) => {
+    if (typeof window === 'undefined') return;
+
+    window.localStorage.setItem(getLikedStorageKey(userId), JSON.stringify(ids));
+  };
+
   useEffect(() => {
     if (!movie) return;
 
@@ -41,6 +61,9 @@ const InfoModal = ({ movie, onClose }: InfoModalProps) => {
         // Check if already in list
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
+          const likedMovieIds = readLikedMovieIds(session.user.id);
+          setLiked(likedMovieIds.includes(movie.id));
+
           const { data: saved } = await supabase
             .from('saved_movies')
             .select('*')
@@ -89,7 +112,24 @@ const InfoModal = ({ movie, onClose }: InfoModalProps) => {
   };
 
   const handleLike = async () => {
-    setLiked((current) => !current);
+    if (!movie) return;
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return alert('Please sign in to like movies');
+
+      const likedMovieIds = readLikedMovieIds(session.user.id);
+      const isCurrentlyLiked = likedMovieIds.includes(movie.id);
+      const nextLikedMovieIds = isCurrentlyLiked
+        ? likedMovieIds.filter((id) => id !== movie.id)
+        : [...likedMovieIds, movie.id];
+
+      writeLikedMovieIds(session.user.id, nextLikedMovieIds);
+      setLiked(!isCurrentlyLiked);
+    } catch (error) {
+      console.error('Error updating like state:', error);
+      alert('Failed to update like state. Please try again.');
+    }
   };
 
   if (!movie) return null;
