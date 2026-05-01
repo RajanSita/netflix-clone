@@ -11,7 +11,7 @@
 
 A **modern, fully-featured streaming platform** built with cutting-edge web technologies. Browse thousands of movies and TV shows, discover trending content, save your favorites, and enjoy a seamless Netflix-like experience.
 
-[🌐 Live Demo](#) • [📖 Documentation](#documentation) • [🚀 Getting Started](#-getting-started) • [🤝 Contributing](#-contributing)
+[🌐 Live Demo](https://netflix-clone-ten-dun-55.vercel.app/) • [📖 Documentation](#documentation) • [🚀 Getting Started](#-getting-started) • [🤝 Contributing](#-contributing)
 
 </div>
 
