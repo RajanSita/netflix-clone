@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Movie, getMovieDetails, getGenres } from '@/lib/tmdb';
-import { X, Plus, Play, ThumbsUp, Check } from 'lucide-react';
+import { X, Plus, ThumbsUp, Check } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { createClient } from '@/lib/supabase';
 
@@ -14,11 +14,15 @@ interface InfoModalProps {
 const InfoModal = ({ movie, onClose }: InfoModalProps) => {
   const [trailer, setTrailer] = useState('');
   const [addedToList, setAddedToList] = useState(false);
+  const [liked, setLiked] = useState(false);
   const [genres, setGenres] = useState<{ id: number; name: string }[]>([]);
   const [supabase] = useState(() => createClient());
 
   useEffect(() => {
     if (!movie) return;
+
+    setAddedToList(false);
+    setLiked(false);
 
     const fetchMovieData = async () => {
       try {
@@ -42,7 +46,7 @@ const InfoModal = ({ movie, onClose }: InfoModalProps) => {
             .select('*')
             .eq('user_id', session.user.id)
             .eq('movie_id', movie.id)
-            .single();
+            .maybeSingle();
           
           if (saved) setAddedToList(true);
         }
@@ -55,6 +59,8 @@ const InfoModal = ({ movie, onClose }: InfoModalProps) => {
   }, [movie, supabase]);
 
   const handleList = async () => {
+    if (!movie) return;
+
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return alert('Please sign in to add to your list');
@@ -80,6 +86,10 @@ const InfoModal = ({ movie, onClose }: InfoModalProps) => {
       console.error('Error updating list:', error);
       alert('Failed to update your list. Please try again.');
     }
+  };
+
+  const handleLike = async () => {
+    setLiked((current) => !current);
   };
 
   if (!movie) return null;
@@ -131,14 +141,20 @@ const InfoModal = ({ movie, onClose }: InfoModalProps) => {
             )}
             <div className="absolute bottom-10 flex w-full items-center justify-between px-10">
               <div className="flex space-x-2">
-                <button className="flex items-center gap-x-2 rounded bg-white px-8 text-xl font-bold text-black transition hover:bg-[#e6e6e6]">
-                  <Play className="h-7 w-7 fill-black" />
-                  Play
-                </button>
-                <button className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-gray-600 bg-[#2a2a2a]/60 transition hover:border-white hover:bg-white/10" onClick={handleList}>
+                <button
+                  type="button"
+                  aria-label={addedToList ? 'Remove from wish list' : 'Add to wish list'}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-gray-600 bg-[#2a2a2a]/60 transition hover:border-white hover:bg-white/10"
+                  onClick={handleList}
+                >
                   {addedToList ? <Check className="h-7 w-7" /> : <Plus className="h-7 w-7" />}
                 </button>
-                <button className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-gray-600 bg-[#2a2a2a]/60 transition hover:border-white hover:bg-white/10">
+                <button
+                  type="button"
+                  aria-label={liked ? 'Unlike' : 'Like'}
+                  className={`flex h-11 w-11 items-center justify-center rounded-full border-2 transition ${liked ? 'border-green-400 bg-green-500/20 text-green-300' : 'border-gray-600 bg-[#2a2a2a]/60 hover:border-white hover:bg-white/10'}`}
+                  onClick={handleLike}
+                >
                   <ThumbsUp className="h-7 w-7" />
                 </button>
               </div>
@@ -166,7 +182,7 @@ const InfoModal = ({ movie, onClose }: InfoModalProps) => {
 
                 <div className="flex flex-col gap-x-10 gap-y-4 font-light md:flex-row">
                   <p className="text-gray-300 leading-relaxed">{movie.overview || 'No description available'}</p>
-                  <div className="flex flex-col space-y-3 text-sm flex-shrink-0">
+                  <div className="flex flex-col space-y-3 text-sm shrink-0">
                     <div>
                       <span className="text-gray-400">Genres:</span>
                       <p className="text-gray-300">{movieGenres.length > 0 ? movieGenres.join(', ') : 'N/A'}</p>
