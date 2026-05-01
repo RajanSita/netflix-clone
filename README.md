@@ -11,7 +11,7 @@
 
 A **modern, fully-featured streaming platform** built with cutting-edge web technologies. Browse thousands of movies and TV shows, discover trending content, save your favorites, and enjoy a seamless Netflix-like experience.
 
-[🌐 Live Demo](https://netflix-clone-ten-dun-55.vercel.app/) • [📖 Documentation](#documentation) • [🚀 Getting Started](#-getting-started) • [🤝 Contributing](#-contributing)
+[🌐 Live Demo](https://netflix-clone-xi-one-24.vercel.app/) • [📖 Documentation](#documentation) • [🚀 Getting Started](#-getting-started) • [🤝 Contributing](#-contributing)
 
 </div>
 
@@ -464,7 +464,7 @@ You are free to:
 - 📧 **Email** - Open an issue on GitHub
 - 🐛 **Bug Reports** - [GitHub Issues](https://github.com/RajanSita/netflix-clone/issues)
 - 💬 **Discussions** - [GitHub Discussions](https://github.com/RajanSita/netflix-clone/discussions)
-- 🌐 **Live Demo** - [https://netflix-clone-ten-dun-55.vercel.app/](https://netflix-clone-ten-dun-55.vercel.app/)
+- 🌐 **Live Demo** - [https://netflix-clone-xi-one-24.vercel.app/](https://netflix-clone-xi-one-24.vercel.app/)
 
 ---
 
