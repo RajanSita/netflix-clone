@@ -7,11 +7,11 @@ import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
 interface NavbarProps {
-  searchQuery: string;
-  onSearchQueryChange: (query: string) => void;
+  searchQuery?: string;
+  onSearchQueryChange?: (query: string) => void;
 }
 
-const Navbar = ({ searchQuery, onSearchQueryChange }: NavbarProps) => {
+const Navbar = ({ searchQuery = '', onSearchQueryChange = () => {} }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [supabase] = useState(() => createClient());
