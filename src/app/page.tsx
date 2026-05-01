@@ -19,21 +19,7 @@ export default function Home() {
   const { user, loading: authLoading } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
-  const [trending, setTrending] = useState<Movie[]>([]);
-  const [netflixOriginals, setNetflixOriginals] = useState<Movie[]>([]);
-  const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
-  const [nowPlayingMovies, setNowPlayingMovies] = useState<Movie[]>([]);
-  const [upcomingMovies, setUpcomingMovies] = useState<Movie[]>([]);
-  const [recentTopRatedMovies, setRecentTopRatedMovies] = useState<Movie[]>([]);
-  const [topRated, setTopRated] = useState<Movie[]>([]);
-  const [actionMovies, setActionMovies] = useState<Movie[]>([]);
-  const [comedyMovies, setComedyMovies] = useState<Movie[]>([]);
-  const [horrorMovies, setHorrorMovies] = useState<Movie[]>([]);
-  const [thrillerMovies, setThrillerMovies] = useState<Movie[]>([]);
-  const [scifiMovies, setScifiMovies] = useState<Movie[]>([]);
-  const [romanceMovies, setRomanceMovies] = useState<Movie[]>([]);
-  const [familyMovies, setFamilyMovies] = useState<Movie[]>([]);
-  const [documentaries, setDocumentaries] = useState<Movie[]>([]);
+  const [displayRows, setDisplayRows] = useState<RowConfig[]>([]);
   
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [billboardMovie, setBillboardMovie] = useState<Movie | null>(null);
@@ -91,22 +77,6 @@ export default function Home() {
         const shuffledFamilyMovies = shuffle(familyMoviesData);
         const shuffledDocumentaries = shuffle(documentariesData);
 
-        setTrending(shuffledTrending);
-        setNetflixOriginals(shuffledNetflixOriginals);
-        setPopularMovies(shuffledPopularMovies);
-        setNowPlayingMovies(shuffledNowPlayingMovies);
-        setUpcomingMovies(shuffledUpcomingMovies);
-        setRecentTopRatedMovies(shuffledRecentTopRatedMovies);
-        setTopRated(shuffledTopRated);
-        setActionMovies(shuffledActionMovies);
-        setComedyMovies(shuffledComedyMovies);
-        setHorrorMovies(shuffledHorrorMovies);
-        setThrillerMovies(shuffledThrillerMovies);
-        setScifiMovies(shuffledScifiMovies);
-        setRomanceMovies(shuffledRomanceMovies);
-        setFamilyMovies(shuffledFamilyMovies);
-        setDocumentaries(shuffledDocumentaries);
-
         const allMovies = shuffle([
           ...shuffledTrending,
           ...shuffledNetflixOriginals,
@@ -128,6 +98,26 @@ export default function Home() {
         if (allMovies.length > 0) {
           setBillboardMovie(allMovies[0]);
         }
+
+        setDisplayRows(
+          shuffle([
+            { title: 'Trending Now', movies: shuffledTrending },
+            { title: 'Netflix Originals', movies: shuffledNetflixOriginals },
+            { title: 'Popular Movies', movies: shuffledPopularMovies },
+            { title: 'Now Playing', movies: shuffledNowPlayingMovies },
+            { title: 'Upcoming Releases', movies: shuffledUpcomingMovies },
+            { title: 'Recent Top Rated', movies: shuffledRecentTopRatedMovies },
+            { title: 'Top Rated', movies: shuffledTopRated },
+            { title: 'Action Thrillers', movies: shuffledActionMovies },
+            { title: 'Comedies', movies: shuffledComedyMovies },
+            { title: 'Scary Movies', movies: shuffledHorrorMovies },
+            { title: 'Thrillers', movies: shuffledThrillerMovies },
+            { title: 'Sci-Fi Adventures', movies: shuffledScifiMovies },
+            { title: 'Romance Movies', movies: shuffledRomanceMovies },
+            { title: 'Family Picks', movies: shuffledFamilyMovies },
+            { title: 'Documentaries', movies: shuffledDocumentaries },
+          ])
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -158,24 +148,6 @@ export default function Home() {
 
   const isSearching = searchQuery.trim().length > 0;
 
-  const rowConfigs: RowConfig[] = shuffle([
-    { title: 'Trending Now', movies: trending },
-    { title: 'Netflix Originals', movies: netflixOriginals },
-    { title: 'Popular Movies', movies: popularMovies },
-    { title: 'Now Playing', movies: nowPlayingMovies },
-    { title: 'Upcoming Releases', movies: upcomingMovies },
-    { title: 'Recent Top Rated', movies: recentTopRatedMovies },
-    { title: 'Top Rated', movies: topRated },
-    { title: 'Action Thrillers', movies: actionMovies },
-    { title: 'Comedies', movies: comedyMovies },
-    { title: 'Scary Movies', movies: horrorMovies },
-    { title: 'Thrillers', movies: thrillerMovies },
-    { title: 'Sci-Fi Adventures', movies: scifiMovies },
-    { title: 'Romance Movies', movies: romanceMovies },
-    { title: 'Family Picks', movies: familyMovies },
-    { title: 'Documentaries', movies: documentaries },
-  ]).slice(0, 12);
-
   return (
     <div className="relative h-screen bg-linear-to-b from-gray-900/10 to-[#141414] lg:h-[140vh]">
       <Navbar searchQuery={searchQuery} onSearchQueryChange={setSearchQuery} />
@@ -187,7 +159,7 @@ export default function Home() {
             <MovieRow title={`Search Results for "${searchQuery}"`} movies={searchResults} onMovieClick={setSelectedMovie} />
           ) : (
             <>
-              {rowConfigs.map((row) => (
+              {displayRows.map((row) => (
                 <MovieRow key={row.title} title={row.title} movies={row.movies} onMovieClick={setSelectedMovie} />
               ))}
             </>
