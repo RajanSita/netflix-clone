@@ -43,6 +43,30 @@ export async function getMovies(url: string): Promise<Movie[]> {
   }
 }
 
+export async function searchMovies(query: string): Promise<Movie[]> {
+  const trimmedQuery = query.trim();
+
+  if (!trimmedQuery) {
+    return [];
+  }
+
+  try {
+    const response = await fetch(
+      `${BASE_URL}/search/multi?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(trimmedQuery)}`,
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to search movies: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return (data.results || []).filter((item: Movie) => item.media_type === 'movie' || item.media_type === 'tv');
+  } catch (error) {
+    console.error('Error searching movies:', error);
+    return [];
+  }
+}
+
 export async function getMovieDetails(id: number, type: 'movie' | 'tv'): Promise<{ videos?: { results: Array<{ type: string; key: string }> } }> {
   try {
     const response = await fetch(`${BASE_URL}/${type}/${id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`);

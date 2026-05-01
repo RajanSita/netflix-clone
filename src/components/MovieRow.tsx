@@ -25,7 +25,7 @@ const MovieRow = ({ title, movies, onMovieClick }: MovieRowProps) => {
 
   return (
     <div className="h-40 space-y-0.5 md:space-y-2 px-4 md:px-12">
-      <h2 className="w-56 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
+      <h2 className="max-w-full overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
         {title}
       </h2>
       <div className="group relative md:-ml-2">
@@ -42,7 +42,7 @@ const MovieRow = ({ title, movies, onMovieClick }: MovieRowProps) => {
             <div
               key={movie.id}
               onClick={() => onMovieClick(movie)}
-              className="relative h-28 min-w-[180px] cursor-pointer transition duration-200 ease-out md:h-36 md:min-w-[260px] md:hover:scale-105 bg-gray-800"
+              className="relative h-28 min-w-45 cursor-pointer bg-gray-800 transition duration-200 ease-out md:h-36 md:min-w-65 md:hover:scale-105"
             >
               {(movie.backdrop_path || movie.poster_path) ? (
                 <img

@@ -6,8 +6,14 @@ import { Search, Bell, LogOut } from 'lucide-react';
 import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
-const Navbar = () => {
+interface NavbarProps {
+  searchQuery: string;
+  onSearchQueryChange: (query: string) => void;
+}
+
+const Navbar = ({ searchQuery, onSearchQueryChange }: NavbarProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [supabase] = useState(() => createClient());
   const router = useRouter();
 
@@ -49,7 +55,26 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center space-x-4 text-sm font-light">
-        <Search className="sm hidden h-6 w-6 sm:inline" />
+        <div className="relative flex items-center">
+          {isSearchOpen && (
+            <input
+              autoFocus
+              type="search"
+              value={searchQuery}
+              onChange={(event) => onSearchQueryChange(event.target.value)}
+              placeholder="Search movies or shows"
+              className="mr-3 w-44 rounded border border-white/20 bg-black/80 px-3 py-2 text-sm text-white outline-none placeholder:text-gray-400 focus:border-[#e50914] sm:w-56"
+            />
+          )}
+          <button
+            type="button"
+            aria-label="Search"
+            onClick={() => setIsSearchOpen((current) => !current)}
+            className="flex items-center justify-center"
+          >
+            <Search className="h-6 w-6 cursor-pointer transition hover:text-[#e50914]" />
+          </button>
+        </div>
         <p className="hidden lg:inline">Kids</p>
         <Bell className="h-6 w-6" />
         <button onClick={handleLogout} className="flex items-center space-x-2">

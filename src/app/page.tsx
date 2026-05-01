@@ -5,11 +5,13 @@ import Navbar from '@/components/Navbar';
 import Billboard from '@/components/Billboard';
 import MovieRow from '@/components/MovieRow';
 import InfoModal from '@/components/InfoModal';
-import { Movie, requests, getMovies } from '@/lib/tmdb';
+import { Movie, requests, getMovies, searchMovies } from '@/lib/tmdb';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function Home() {
   const { user, loading: authLoading } = useAuth();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [trending, setTrending] = useState<Movie[]>([]);
   const [netflixOriginals, setNetflixOriginals] = useState<Movie[]>([]);
   const [topRated, setTopRated] = useState<Movie[]>([]);
@@ -66,23 +68,49 @@ export default function Home() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const runSearch = async () => {
+      if (!searchQuery.trim()) {
+        setSearchResults([]);
+        return;
+      }
+
+      const results = await searchMovies(searchQuery);
+      setSearchResults(results);
+    };
+
+    const timeout = window.setTimeout(() => {
+      runSearch();
+    }, 300);
+
+    return () => window.clearTimeout(timeout);
+  }, [searchQuery]);
+
   if (authLoading || !user) return <div className="h-screen bg-black flex items-center justify-center">Loading...</div>;
 
+  const isSearching = searchQuery.trim().length > 0;
+
   return (
-    <div className="relative h-screen bg-gradient-to-b from-gray-900/10 to-[#141414] lg:h-[140vh]">
-      <Navbar />
+    <div className="relative h-screen bg-linear-to-b from-gray-900/10 to-[#141414] lg:h-[140vh]">
+      <Navbar searchQuery={searchQuery} onSearchQueryChange={setSearchQuery} />
       <main className="relative pb-24 lg:space-y-24">
-        <Billboard movie={billboardMovie} />
+        {!isSearching && <Billboard movie={billboardMovie} />}
         
-        <section className="md:space-y-24">
-          <MovieRow title="Trending Now" movies={trending} onMovieClick={setSelectedMovie} />
-          <MovieRow title="Netflix Originals" movies={netflixOriginals} onMovieClick={setSelectedMovie} />
-          <MovieRow title="Top Rated" movies={topRated} onMovieClick={setSelectedMovie} />
-          <MovieRow title="Action Thrillers" movies={actionMovies} onMovieClick={setSelectedMovie} />
-          <MovieRow title="Comedies" movies={comedyMovies} onMovieClick={setSelectedMovie} />
-          <MovieRow title="Scary Movies" movies={horrorMovies} onMovieClick={setSelectedMovie} />
-          <MovieRow title="Romance Movies" movies={romanceMovies} onMovieClick={setSelectedMovie} />
-          <MovieRow title="Documentaries" movies={documentaries} onMovieClick={setSelectedMovie} />
+        <section className={`${isSearching ? 'pt-24 md:pt-28' : ''} md:space-y-24`}>
+          {isSearching ? (
+            <MovieRow title={`Search Results for "${searchQuery}"`} movies={searchResults} onMovieClick={setSelectedMovie} />
+          ) : (
+            <>
+              <MovieRow title="Trending Now" movies={trending} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Netflix Originals" movies={netflixOriginals} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Top Rated" movies={topRated} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Action Thrillers" movies={actionMovies} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Comedies" movies={comedyMovies} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Scary Movies" movies={horrorMovies} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Romance Movies" movies={romanceMovies} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Documentaries" movies={documentaries} onMovieClick={setSelectedMovie} />
+            </>
+          )}
         </section>
       </main>
 
