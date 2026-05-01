@@ -8,6 +8,13 @@ import InfoModal from '@/components/InfoModal';
 import { Movie, requests, getMovies, searchMovies } from '@/lib/tmdb';
 import { useAuth } from '@/hooks/useAuth';
 
+type RowConfig = {
+  title: string;
+  movies: Movie[];
+};
+
+const shuffle = <T,>(items: T[]) => [...items].sort(() => Math.random() - 0.5);
+
 export default function Home() {
   const { user, loading: authLoading } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
@@ -68,25 +75,58 @@ export default function Home() {
           getMovies(requests.fetchDocumentaries),
         ]);
 
-        setTrending(trendingData);
-        setNetflixOriginals(netflixOriginalsData);
-        setPopularMovies(popularMoviesData);
-        setNowPlayingMovies(nowPlayingMoviesData);
-        setUpcomingMovies(upcomingMoviesData);
-        setRecentTopRatedMovies(recentTopRatedMoviesData);
-        setTopRated(topRatedData);
-        setActionMovies(actionMoviesData);
-        setComedyMovies(comedyMoviesData);
-        setHorrorMovies(horrorMoviesData);
-        setThrillerMovies(thrillerMoviesData);
-        setScifiMovies(scifiMoviesData);
-        setRomanceMovies(romanceMoviesData);
-        setFamilyMovies(familyMoviesData);
-        setDocumentaries(documentariesData);
+        const shuffledTrending = shuffle(trendingData);
+        const shuffledNetflixOriginals = shuffle(netflixOriginalsData);
+        const shuffledPopularMovies = shuffle(popularMoviesData);
+        const shuffledNowPlayingMovies = shuffle(nowPlayingMoviesData);
+        const shuffledUpcomingMovies = shuffle(upcomingMoviesData);
+        const shuffledRecentTopRatedMovies = shuffle(recentTopRatedMoviesData);
+        const shuffledTopRated = shuffle(topRatedData);
+        const shuffledActionMovies = shuffle(actionMoviesData);
+        const shuffledComedyMovies = shuffle(comedyMoviesData);
+        const shuffledHorrorMovies = shuffle(horrorMoviesData);
+        const shuffledThrillerMovies = shuffle(thrillerMoviesData);
+        const shuffledScifiMovies = shuffle(scifiMoviesData);
+        const shuffledRomanceMovies = shuffle(romanceMoviesData);
+        const shuffledFamilyMovies = shuffle(familyMoviesData);
+        const shuffledDocumentaries = shuffle(documentariesData);
 
-        // Safely pick random movie for billboard after data is fetched on client
-        if (trendingData.length > 0) {
-          setBillboardMovie(trendingData[Math.floor(Math.random() * trendingData.length)]);
+        setTrending(shuffledTrending);
+        setNetflixOriginals(shuffledNetflixOriginals);
+        setPopularMovies(shuffledPopularMovies);
+        setNowPlayingMovies(shuffledNowPlayingMovies);
+        setUpcomingMovies(shuffledUpcomingMovies);
+        setRecentTopRatedMovies(shuffledRecentTopRatedMovies);
+        setTopRated(shuffledTopRated);
+        setActionMovies(shuffledActionMovies);
+        setComedyMovies(shuffledComedyMovies);
+        setHorrorMovies(shuffledHorrorMovies);
+        setThrillerMovies(shuffledThrillerMovies);
+        setScifiMovies(shuffledScifiMovies);
+        setRomanceMovies(shuffledRomanceMovies);
+        setFamilyMovies(shuffledFamilyMovies);
+        setDocumentaries(shuffledDocumentaries);
+
+        const allMovies = shuffle([
+          ...shuffledTrending,
+          ...shuffledNetflixOriginals,
+          ...shuffledPopularMovies,
+          ...shuffledNowPlayingMovies,
+          ...shuffledUpcomingMovies,
+          ...shuffledRecentTopRatedMovies,
+          ...shuffledTopRated,
+          ...shuffledActionMovies,
+          ...shuffledComedyMovies,
+          ...shuffledHorrorMovies,
+          ...shuffledThrillerMovies,
+          ...shuffledScifiMovies,
+          ...shuffledRomanceMovies,
+          ...shuffledFamilyMovies,
+          ...shuffledDocumentaries,
+        ]);
+
+        if (allMovies.length > 0) {
+          setBillboardMovie(allMovies[0]);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -118,6 +158,24 @@ export default function Home() {
 
   const isSearching = searchQuery.trim().length > 0;
 
+  const rowConfigs: RowConfig[] = shuffle([
+    { title: 'Trending Now', movies: trending },
+    { title: 'Netflix Originals', movies: netflixOriginals },
+    { title: 'Popular Movies', movies: popularMovies },
+    { title: 'Now Playing', movies: nowPlayingMovies },
+    { title: 'Upcoming Releases', movies: upcomingMovies },
+    { title: 'Recent Top Rated', movies: recentTopRatedMovies },
+    { title: 'Top Rated', movies: topRated },
+    { title: 'Action Thrillers', movies: actionMovies },
+    { title: 'Comedies', movies: comedyMovies },
+    { title: 'Scary Movies', movies: horrorMovies },
+    { title: 'Thrillers', movies: thrillerMovies },
+    { title: 'Sci-Fi Adventures', movies: scifiMovies },
+    { title: 'Romance Movies', movies: romanceMovies },
+    { title: 'Family Picks', movies: familyMovies },
+    { title: 'Documentaries', movies: documentaries },
+  ]).slice(0, 12);
+
   return (
     <div className="relative h-screen bg-linear-to-b from-gray-900/10 to-[#141414] lg:h-[140vh]">
       <Navbar searchQuery={searchQuery} onSearchQueryChange={setSearchQuery} />
@@ -129,21 +187,9 @@ export default function Home() {
             <MovieRow title={`Search Results for "${searchQuery}"`} movies={searchResults} onMovieClick={setSelectedMovie} />
           ) : (
             <>
-              <MovieRow title="Trending Now" movies={trending} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Netflix Originals" movies={netflixOriginals} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Popular Movies" movies={popularMovies} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Now Playing" movies={nowPlayingMovies} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Upcoming Releases" movies={upcomingMovies} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Recent Top Rated" movies={recentTopRatedMovies} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Top Rated" movies={topRated} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Action Thrillers" movies={actionMovies} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Comedies" movies={comedyMovies} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Scary Movies" movies={horrorMovies} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Thrillers" movies={thrillerMovies} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Sci-Fi Adventures" movies={scifiMovies} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Romance Movies" movies={romanceMovies} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Family Picks" movies={familyMovies} onMovieClick={setSelectedMovie} />
-              <MovieRow title="Documentaries" movies={documentaries} onMovieClick={setSelectedMovie} />
+              {rowConfigs.map((row) => (
+                <MovieRow key={row.title} title={row.title} movies={row.movies} onMovieClick={setSelectedMovie} />
+              ))}
             </>
           )}
         </section>

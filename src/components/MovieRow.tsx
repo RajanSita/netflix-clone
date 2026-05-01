@@ -62,13 +62,13 @@ const MovieRow = ({ title, movies, onMovieClick }: MovieRowProps) => {
                   <span className="text-gray-400 text-xs text-center px-2">No image</span>
                 </div>
               )}
-              <div className="flex min-h-18 flex-col justify-between gap-1 px-3 py-2">
-                <p className="line-clamp-2 text-sm font-semibold leading-tight text-white">
+              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black via-black/80 to-transparent px-3 pb-2 pt-8">
+                <p className="line-clamp-2 text-sm font-semibold leading-tight text-white drop-shadow-md">
                   {getMovieTitle(movie)}
                 </p>
-                <div className="flex items-center justify-between text-[11px] text-gray-300">
+                <div className="mt-1 flex items-center justify-between text-[11px] text-gray-200">
                   <span>{getMovieYear(movie)}</span>
-                  <span className="rounded-full bg-white/10 px-2 py-0.5 uppercase tracking-[0.18em] text-gray-200">
+                  <span className="rounded-full bg-red-600/90 px-2 py-0.5 uppercase tracking-[0.18em] text-white">
                     {movie.media_type || 'movie'}
                   </span>
                 </div>
