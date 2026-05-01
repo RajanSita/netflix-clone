@@ -14,6 +14,10 @@ const MovieRow = ({ title, movies, onMovieClick }: MovieRowProps) => {
   const rowRef = useRef<HTMLDivElement>(null);
   const [isMoved, setIsMoved] = useState(false);
 
+  const getMovieTitle = (movie: Movie) => movie.title || movie.name || 'Untitled';
+
+  const getMovieYear = (movie: Movie) => movie.release_date?.slice(0, 4) || movie.first_air_date?.slice(0, 4) || '';
+
   const handleClick = (direction: 'left' | 'right') => {
     setIsMoved(true);
     if (rowRef.current) {
@@ -42,22 +46,33 @@ const MovieRow = ({ title, movies, onMovieClick }: MovieRowProps) => {
             <div
               key={movie.id}
               onClick={() => onMovieClick(movie)}
-              className="relative h-28 min-w-45 cursor-pointer bg-gray-800 transition duration-200 ease-out md:h-36 md:min-w-65 md:hover:scale-105"
+              className="group relative flex min-w-45 cursor-pointer flex-col overflow-hidden rounded-md bg-[#181818] transition duration-200 ease-out md:min-w-65 md:hover:scale-105"
             >
               {(movie.backdrop_path || movie.poster_path) ? (
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path || movie.poster_path}`}
-                  className="rounded-sm object-cover md:rounded h-full w-full"
-                  alt={movie.title || movie.name}
+                  className="h-28 w-full object-cover md:h-36"
+                  alt={getMovieTitle(movie)}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
                 />
               ) : (
-                <div className="h-full w-full flex items-center justify-center bg-gray-700 rounded-sm md:rounded">
+                <div className="flex h-28 w-full items-center justify-center bg-gray-700 md:h-36">
                   <span className="text-gray-400 text-xs text-center px-2">No image</span>
                 </div>
               )}
+              <div className="flex min-h-18 flex-col justify-between gap-1 px-3 py-2">
+                <p className="line-clamp-2 text-sm font-semibold leading-tight text-white">
+                  {getMovieTitle(movie)}
+                </p>
+                <div className="flex items-center justify-between text-[11px] text-gray-300">
+                  <span>{getMovieYear(movie)}</span>
+                  <span className="rounded-full bg-white/10 px-2 py-0.5 uppercase tracking-[0.18em] text-gray-200">
+                    {movie.media_type || 'movie'}
+                  </span>
+                </div>
+              </div>
             </div>
           ))}
         </div>

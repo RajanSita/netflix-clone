@@ -14,11 +14,18 @@ export default function Home() {
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [trending, setTrending] = useState<Movie[]>([]);
   const [netflixOriginals, setNetflixOriginals] = useState<Movie[]>([]);
+  const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
+  const [nowPlayingMovies, setNowPlayingMovies] = useState<Movie[]>([]);
+  const [upcomingMovies, setUpcomingMovies] = useState<Movie[]>([]);
+  const [recentTopRatedMovies, setRecentTopRatedMovies] = useState<Movie[]>([]);
   const [topRated, setTopRated] = useState<Movie[]>([]);
   const [actionMovies, setActionMovies] = useState<Movie[]>([]);
   const [comedyMovies, setComedyMovies] = useState<Movie[]>([]);
   const [horrorMovies, setHorrorMovies] = useState<Movie[]>([]);
+  const [thrillerMovies, setThrillerMovies] = useState<Movie[]>([]);
+  const [scifiMovies, setScifiMovies] = useState<Movie[]>([]);
   const [romanceMovies, setRomanceMovies] = useState<Movie[]>([]);
+  const [familyMovies, setFamilyMovies] = useState<Movie[]>([]);
   const [documentaries, setDocumentaries] = useState<Movie[]>([]);
   
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
@@ -30,30 +37,51 @@ export default function Home() {
         const [
           trendingData,
           netflixOriginalsData,
+          popularMoviesData,
+          nowPlayingMoviesData,
+          upcomingMoviesData,
+          recentTopRatedMoviesData,
           topRatedData,
           actionMoviesData,
           comedyMoviesData,
           horrorMoviesData,
+          thrillerMoviesData,
+          scifiMoviesData,
           romanceMoviesData,
+          familyMoviesData,
           documentariesData,
         ] = await Promise.all([
           getMovies(requests.fetchTrending),
           getMovies(requests.fetchNetflixOriginals),
+          getMovies(requests.fetchPopularMovies),
+          getMovies(requests.fetchNowPlayingMovies),
+          getMovies(requests.fetchUpcomingMovies),
+          getMovies(requests.fetchRecentTopRated),
           getMovies(requests.fetchTopRated),
           getMovies(requests.fetchActionMovies),
           getMovies(requests.fetchComedyMovies),
           getMovies(requests.fetchHorrorMovies),
+          getMovies(requests.fetchThrillerMovies),
+          getMovies(requests.fetchSciFiMovies),
           getMovies(requests.fetchRomanceMovies),
+          getMovies(requests.fetchFamilyMovies),
           getMovies(requests.fetchDocumentaries),
         ]);
 
         setTrending(trendingData);
         setNetflixOriginals(netflixOriginalsData);
+        setPopularMovies(popularMoviesData);
+        setNowPlayingMovies(nowPlayingMoviesData);
+        setUpcomingMovies(upcomingMoviesData);
+        setRecentTopRatedMovies(recentTopRatedMoviesData);
         setTopRated(topRatedData);
         setActionMovies(actionMoviesData);
         setComedyMovies(comedyMoviesData);
         setHorrorMovies(horrorMoviesData);
+        setThrillerMovies(thrillerMoviesData);
+        setScifiMovies(scifiMoviesData);
         setRomanceMovies(romanceMoviesData);
+        setFamilyMovies(familyMoviesData);
         setDocumentaries(documentariesData);
 
         // Safely pick random movie for billboard after data is fetched on client
@@ -103,11 +131,18 @@ export default function Home() {
             <>
               <MovieRow title="Trending Now" movies={trending} onMovieClick={setSelectedMovie} />
               <MovieRow title="Netflix Originals" movies={netflixOriginals} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Popular Movies" movies={popularMovies} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Now Playing" movies={nowPlayingMovies} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Upcoming Releases" movies={upcomingMovies} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Recent Top Rated" movies={recentTopRatedMovies} onMovieClick={setSelectedMovie} />
               <MovieRow title="Top Rated" movies={topRated} onMovieClick={setSelectedMovie} />
               <MovieRow title="Action Thrillers" movies={actionMovies} onMovieClick={setSelectedMovie} />
               <MovieRow title="Comedies" movies={comedyMovies} onMovieClick={setSelectedMovie} />
               <MovieRow title="Scary Movies" movies={horrorMovies} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Thrillers" movies={thrillerMovies} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Sci-Fi Adventures" movies={scifiMovies} onMovieClick={setSelectedMovie} />
               <MovieRow title="Romance Movies" movies={romanceMovies} onMovieClick={setSelectedMovie} />
+              <MovieRow title="Family Picks" movies={familyMovies} onMovieClick={setSelectedMovie} />
               <MovieRow title="Documentaries" movies={documentaries} onMovieClick={setSelectedMovie} />
             </>
           )}
