@@ -38,8 +38,11 @@ const Navbar = ({ searchQuery = '', onSearchQueryChange = () => {} }: NavbarProp
   return (
     <nav className={`fixed top-0 z-50 flex w-full items-center justify-between px-4 py-4 transition-all duration-500 lg:px-12 lg:py-6 ${isScrolled ? 'bg-[#141414]' : 'bg-transparent'}`}>
       <div className="flex items-center space-x-2 md:space-x-10">
-        <Link href="/">
-          <span className="text-2xl font-black tracking-[0.25em] text-[#e50914] md:text-4xl md:tracking-[0.35em]">
+        <Link href="/" className="flex items-center">
+          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-[#e50914] text-xl font-black leading-none text-white shadow-lg md:h-11 md:w-11 md:text-2xl">
+            N
+          </span>
+          <span className="ml-3 hidden text-2xl font-black tracking-[0.35em] text-[#e50914] md:block">
             NETFLIX
           </span>
         </Link>
