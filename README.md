@@ -464,7 +464,7 @@ You are free to:
 - 📧 **Email** - Open an issue on GitHub
 - 🐛 **Bug Reports** - [GitHub Issues](https://github.com/RajanSita/netflix-clone/issues)
 - 💬 **Discussions** - [GitHub Discussions](https://github.com/RajanSita/netflix-clone/discussions)
-- 🌐 **Live Demo** - Visit the deployed version
+- 🌐 **Live Demo** - [https://netflix-clone-ten-dun-55.vercel.app/](https://netflix-clone-ten-dun-55.vercel.app/)
 
 ---
 
